@@ -9,6 +9,22 @@ export interface Profile {
   updated_at: string
 }
 
+export type ContractEstado = 'activo' | 'prorrogado' | 'finalizado' | 'rescindido'
+
+export const CONTRACT_ESTADO_LABELS: Record<ContractEstado, string> = {
+  activo:     'Activo',
+  prorrogado: 'Prorrogado',
+  finalizado: 'Finalizado',
+  rescindido: 'Rescindido',
+}
+
+export const CONTRACT_ESTADO_COLORS: Record<ContractEstado, string> = {
+  activo:     '#34D399',
+  prorrogado: '#FBBF24',
+  finalizado: '#7288AE',
+  rescindido: '#F87171',
+}
+
 export interface Contract {
   id: string
   expediente: string
@@ -19,6 +35,7 @@ export interface Contract {
   fecha_inicio: string | null
   fecha_vence: string
   responsable: string
+  estado: ContractEstado
   user_id: string
   created_at: string
 }
