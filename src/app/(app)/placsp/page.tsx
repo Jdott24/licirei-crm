@@ -56,6 +56,9 @@ export default function PlacspPage() {
     const item = modal.item
     setModal(null)
 
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setError('Sesión expirada, recarga la página'); return }
+
     const { error: pErr } = await supabase.from('pipeline').insert({
       expediente:   item.expediente,
       org:          item.org,
@@ -67,13 +70,15 @@ export default function PlacspPage() {
       docs_total:   6,
       cpv:          item.cpv,
       stage,
+      user_id:      user.id,
     })
     if (pErr) { setError(pErr.message); return }
 
     await supabase.from('activity').insert({
-      quien: responsable,
-      txt:   `${item.org} añadida al pipeline — etapa: ${stage}`,
-      tone:  'ok',
+      quien:   responsable,
+      txt:     `${item.org} añadida al pipeline — etapa: ${stage}`,
+      tone:    'ok',
+      user_id: user.id,
     })
     await supabase.from('inbox').delete().eq('id', item.id)
     await fetchAll()
@@ -113,10 +118,11 @@ export default function PlacspPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
     const { error: fErr } = await supabase.from('cpv_filters').insert({
-      nombre: 'Nuevo filtro',
+      nombre:  'Nuevo filtro',
       cliente: '',
-      cpvs: [],
-      activo: true,
+      cpvs:    [],
+      activo:  true,
+      user_id: user.id,
     })
     if (fErr) { setError(fErr.message); return }
     fetchAll()

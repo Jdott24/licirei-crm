@@ -37,12 +37,15 @@ export default function SolvenciaPage() {
     e.preventDefault()
     if (!form.nombre.trim() || !form.fecha_cad) { setError('Nombre y fecha de caducidad son obligatorios'); return }
     setSaving(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setError('Sesión expirada, recarga la página'); setSaving(false); return }
     const { error: err } = await supabase.from('solvencia').insert({
       nombre:    form.nombre.trim(),
       tipo:      form.tipo.trim(),
       emisor:    form.emisor.trim(),
       fecha_ini: form.fecha_ini || null,
       fecha_cad: form.fecha_cad,
+      user_id:   user.id,
     })
     setSaving(false)
     if (err) { setError(err.message); return }

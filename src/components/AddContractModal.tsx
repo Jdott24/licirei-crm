@@ -28,15 +28,18 @@ export default function AddContractModal({ onClose, onSaved }: Props) {
       setError('Organismo y Fecha de vencimiento son obligatorios'); return
     }
     setLoading(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setError('Sesión expirada, recarga la página'); setLoading(false); return }
     const { error: err } = await supabase.from('contracts').insert({
-      expediente:  form.expediente.trim() || `MAN-${Date.now()}`,
-      org:         form.org.trim(),
-      obj:         form.obj.trim(),
-      importe:     parseFloat(form.importe.replace(/\./g, '').replace(',', '.')) || 0,
-      cpv:         form.cpv.trim(),
+      expediente:   form.expediente.trim() || `MAN-${Date.now()}`,
+      org:          form.org.trim(),
+      obj:          form.obj.trim(),
+      importe:      parseFloat(form.importe.replace(/\./g, '').replace(',', '.')) || 0,
+      cpv:          form.cpv.trim(),
       fecha_inicio: form.fecha_inicio || null,
       fecha_vence:  form.fecha_vence,
       responsable:  form.responsable.trim() || 'Sin asignar',
+      user_id:      user.id,
     })
     setLoading(false)
     if (err) { setError(err.message); return }
