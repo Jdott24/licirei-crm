@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#111844;--bg:#0a0e2a;--bg2:#0d1238;--panel:#141a4d;--panel2:#1a2160;--sidebar:#0c1138;--slate:#4B5694;--steel:#7288AE;--cream:#EAE0CF;--muted:#8e98c9;--border:rgba(114,136,174,0.16);--border2:rgba(114,136,174,0.30);--ok:#34D399;--warn:#FBBF24;--danger:#F87171;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);}
+@keyframes lcpulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,0.55);}50%{box-shadow:0 0 0 5px rgba(248,113,113,0);}}
+::-webkit-scrollbar{width:9px;height:9px;}
+::-webkit-scrollbar-thumb{background:rgba(114,136,174,0.28);border-radius:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+input::placeholder{color:#5d68a0;}
+</style>
+</helmet>
+<div style="display:flex;height:100vh;background:var(--bg);color:var(--cream);font-family:Geist,system-ui,sans-serif;font-size:14px;overflow:hidden;">
+
+  <aside style="width:252px;flex-shrink:0;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;">
+    <div style="padding:18px 18px 14px;border-bottom:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+        <div style="width:26px;height:26px;border-radius:7px;background:{{ accentGrad }};display:flex;align-items:center;justify-content:center;font-weight:700;color:#0a0e2a;font-size:15px;">L</div>
+        <span style="font-size:17px;font-weight:600;letter-spacing:-0.01em;">Licirei</span>
+      </div>
+      <button style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:8px 11px;cursor:pointer;color:var(--cream);text-align:left;" style-hover="border-color:var(--steel);">
+        <span style="display:flex;flex-direction:column;line-height:1.25;overflow:hidden;">
+          <span style="font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--steel);">Empresa</span>
+          <span style="font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ company }}</span>
+        </span>
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#8e98c9" stroke-width="1.6"><path d="M4 6l4 4 4-4"/></svg>
+      </button>
+    </div>
+
+    <nav style="flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:3px;">
+      <div style="font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;color:#5d68a0;padding:8px 10px 5px;">Dashboard</div>
+      <button onClick="{{ go.dashboard }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:8px;padding:8px 10px;cursor:pointer;background:{{ nav.dashboard.bg }};color:{{ nav.dashboard.color }};font-weight:{{ nav.dashboard.fw }};font-size:13.5px;font-family:Geist;border-left:2px solid {{ nav.dashboard.bar }};" style-hover="background:rgba(114,136,174,0.10);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+        Dashboard
+      </button>
+
+      <div style="font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;color:#5d68a0;padding:14px 10px 5px;">Contratos</div>
+      <button onClick="{{ go.cartera }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:8px;padding:8px 10px;cursor:pointer;background:{{ nav.cartera.bg }};color:{{ nav.cartera.color }};font-weight:{{ nav.cartera.fw }};font-size:13.5px;font-family:Geist;border-left:2px solid {{ nav.cartera.bar }};" style-hover="background:rgba(114,136,174,0.10);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="12" height="8" rx="1"/><path d="M6 5V3h4v2"/></svg>
+        Cartera activa
+      </button>
+
+      <div style="font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;color:#5d68a0;padding:14px 10px 5px;">Licitaciones</div>
+      <button onClick="{{ go.pipeline }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:8px;padding:8px 10px;cursor:pointer;background:{{ nav.pipeline.bg }};color:{{ nav.pipeline.color }};font-weight:{{ nav.pipeline.fw }};font-size:13.5px;font-family:Geist;border-left:2px solid {{ nav.pipeline.bar }};" style-hover="background:rgba(114,136,174,0.10);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="3.5" height="12" rx="1"/><rect x="6.5" y="2" width="3.5" height="9" rx="1"/><rect x="11" y="2" width="3.5" height="6" rx="1"/></svg>
+        Pipeline
+      </button>
+      <button onClick="{{ go.placsp }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:8px;padding:8px 10px;cursor:pointer;background:{{ nav.placsp.bg }};color:{{ nav.placsp.color }};font-weight:{{ nav.placsp.fw }};font-size:13.5px;font-family:Geist;border-left:2px solid {{ nav.placsp.bar }};" style-hover="background:rgba(114,136,174,0.10);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9l2-6h8l2 6v4H2z"/><path d="M2 9h3l1 2h4l1-2h3"/></svg>
+        Explorar PLACSP
+      </button>
+
+      <div style="font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;color:#5d68a0;padding:14px 10px 5px;">Empresa</div>
+      <button onClick="{{ go.organismos }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:8px;padding:8px 10px;cursor:pointer;background:{{ nav.organismos.bg }};color:{{ nav.organismos.color }};font-weight:{{ nav.organismos.fw }};font-size:13.5px;font-family:Geist;border-left:2px solid {{ nav.organismos.bar }};" style-hover="background:rgba(114,136,174,0.10);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M6 5h.5M9.5 5h.5M6 8h.5M9.5 8h.5M7 13v-2h2v2"/></svg>
+        Organismos
+      </button>
+      <button onClick="{{ go.solvencia }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:8px;padding:8px 10px;cursor:pointer;background:{{ nav.solvencia.bg }};color:{{ nav.solvencia.color }};font-weight:{{ nav.solvencia.fw }};font-size:13.5px;font-family:Geist;border-left:2px solid {{ nav.solvencia.bar }};" style-hover="background:rgba(114,136,174,0.10);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l5 2v4c0 3-2 5-5 6-3-1-5-3-5-6V4z"/></svg>
+        Solvencia
+      </button>
+
+      <div style="height:1px;background:var(--border);margin:14px 4px 10px;"></div>
+      <button onClick="{{ go.ajustes }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:8px;padding:8px 10px;cursor:pointer;background:{{ nav.ajustes.bg }};color:{{ nav.ajustes.color }};font-weight:{{ nav.ajustes.fw }};font-size:13.5px;font-family:Geist;border-left:2px solid {{ nav.ajustes.bar }};" style-hover="background:rgba(114,136,174,0.10);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg>
+        Ajustes
+      </button>
+      <button onClick="{{ go.plan }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:8px;padding:8px 10px;cursor:pointer;background:{{ nav.plan.bg }};color:{{ nav.plan.color }};font-weight:{{ nav.plan.fw }};font-size:13.5px;font-family:Geist;border-left:2px solid {{ nav.plan.bar }};" style-hover="background:rgba(114,136,174,0.10);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="8" rx="1.5"/><path d="M2 7h12"/></svg>
+        Plan &amp; Facturación
+      </button>
+    </nav>
+
+    <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+      <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#4B5694,#7288AE);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--cream);">AF</div>
+      <div style="line-height:1.3;overflow:hidden;">
+        <div style="font-size:12.5px;font-weight:500;">Almudena Ferrer</div>
+        <div style="font-size:11px;color:var(--steel);">Responsable de licitaciones</div>
+      </div>
+    </div>
+  </aside>
+
+  <main style="flex:1;overflow-y:auto;position:relative;">
+
+    <!-- ============ DASHBOARD ============ -->
+    <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:26px 30px 40px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;">
+        <div>
+          <h1 style="margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Dashboard</h1>
+          <p style="margin:0;color:var(--steel);font-size:13px;">Visión general de la cartera y el pipeline · {{ company }}</p>
+        </div>
+        <div style="font-family:'Geist Mono',monospace;font-size:11.5px;color:var(--steel);">27 jun 2026</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px;">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 16px 14px;">
+            <div style="font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--steel);margin-bottom:11px;">{{ k.label }}</div>
+            <div style="font-family:'Geist Mono',monospace;font-size:26px;font-weight:600;letter-spacing:-0.02em;line-height:1;">{{ k.value }}</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:9px;">{{ k.sub }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:18px;margin-bottom:18px;">
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--border);">
+            <h2 style="margin:0;font-size:14px;font-weight:600;">Contratos próximos a vencer</h2>
+            <button onClick="{{ go.cartera }}" style="background:transparent;border:none;color:var(--steel);font-size:12px;cursor:pointer;font-family:Geist;" style-hover="color:var(--cream);">Ver cartera →</button>
+          </div>
+          <table style="width:100%;border-collapse:collapse;">
+            <thead><tr style="text-align:left;">
+              <th style="padding:9px 18px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;">Organismo</th>
+              <th style="padding:9px 12px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;text-align:right;">Importe</th>
+              <th style="padding:9px 12px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;text-align:right;">Vence</th>
+              <th style="padding:9px 18px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;text-align:right;">Restan</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ dashSoon }}" as="c" hint-placeholder-count="5">
+                <tr onClick="{{ c.onClick }}" style="cursor:pointer;border-top:1px solid var(--border);" style-hover="background:rgba(114,136,174,0.07);">
+                  <td style="padding:11px 18px;">
+                    <div style="font-size:13px;font-weight:500;">{{ c.org }}</div>
+                    <div style="font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--steel);margin-top:2px;">{{ c.id }}</div>
+                  </td>
+                  <td style="padding:11px 12px;text-align:right;font-family:'Geist Mono',monospace;font-size:12.5px;">{{ c.impStr }}</td>
+                  <td style="padding:11px 12px;text-align:right;font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted);">{{ c.venceStr }}</td>
+                  <td style="padding:11px 18px;text-align:right;">
+                    <span style="display:inline-flex;align-items:center;gap:7px;font-family:'Geist Mono',monospace;font-size:12.5px;font-weight:600;">
+                      <span style="width:8px;height:8px;border-radius:50%;background:{{ c.dotColor }};animation:{{ c.anim }};"></span>{{ c.diasStr }}
+                    </span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--border);">
+            <h2 style="margin:0;font-size:14px;font-weight:600;">Oportunidades prioritarias</h2>
+            <button onClick="{{ go.pipeline }}" style="background:transparent;border:none;color:var(--steel);font-size:12px;cursor:pointer;font-family:Geist;" style-hover="color:var(--cream);">Pipeline →</button>
+          </div>
+          <div style="padding:8px;display:flex;flex-direction:column;gap:6px;">
+            <sc-for list="{{ dashOpps }}" as="o" hint-placeholder-count="4">
+              <div onClick="{{ o.onClick }}" style="cursor:pointer;padding:11px 12px;border-radius:9px;border:1px solid var(--border);" style-hover="border-color:var(--border2);background:rgba(114,136,174,0.06);">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                  <span style="font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ o.org }}</span>
+                  <span style="display:inline-flex;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:11.5px;flex-shrink:0;"><span style="width:7px;height:7px;border-radius:50%;background:{{ o.dotColor }};"></span>{{ o.diasStr }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:6px;font-family:'Geist Mono',monospace;font-size:11px;color:var(--steel);">
+                  <span>{{ o.preStr }}</span><span>doc {{ o.docLabel }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1.45fr;gap:18px;">
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <div style="padding:15px 18px;border-bottom:1px solid var(--border);"><h2 style="margin:0;font-size:14px;font-weight:600;">Alertas activas</h2></div>
+          <div style="padding:8px;display:flex;flex-direction:column;gap:4px;">
+            <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="4">
+              <div style="display:flex;gap:11px;padding:10px 12px;border-radius:9px;" style-hover="background:rgba(114,136,174,0.06);">
+                <span style="width:8px;height:8px;border-radius:50%;background:{{ a.tone }};margin-top:5px;flex-shrink:0;"></span>
+                <div style="line-height:1.4;overflow:hidden;">
+                  <div style="font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ a.title }}</div>
+                  <div style="font-size:11.5px;color:var(--muted);">{{ a.txt }}</div>
+                  <div style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--steel);margin-top:2px;">{{ a.meta }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <div style="padding:15px 18px;border-bottom:1px solid var(--border);"><h2 style="margin:0;font-size:14px;font-weight:600;">Actividad reciente</h2></div>
+          <div style="padding:6px 8px;">
+            <sc-for list="{{ activity }}" as="ev" hint-placeholder-count="5">
+              <div style="display:flex;gap:11px;padding:10px 12px;align-items:flex-start;">
+                <span style="width:7px;height:7px;border-radius:50%;background:var(--steel);margin-top:6px;flex-shrink:0;"></span>
+                <div style="line-height:1.45;">
+                  <span style="font-size:12.5px;"><span style="font-weight:600;">{{ ev.who }}</span> <span style="color:var(--muted);">{{ ev.txt }}</span></span>
+                  <div style="font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--steel);margin-top:1px;">{{ ev.when }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ CARTERA ============ -->
+    <sc-if value="{{ isCartera }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:26px 30px 40px;">
+      <div style="margin-bottom:20px;">
+        <h1 style="margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Cartera activa</h1>
+        <p style="margin:0;color:var(--steel);font-size:13px;">Contratos adjudicados y en ejecución · semáforo de vencimiento</p>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border2);border-radius:9px;padding:8px 12px;flex:1;max-width:340px;">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8e98c9" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+          <input value="{{ carteraQuery }}" onInput="{{ onCartera }}" placeholder="Buscar por organismo, objeto o expediente…" style="flex:1;background:transparent;border:none;outline:none;color:var(--cream);font-family:Geist;font-size:13px;"/>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="display:flex;gap:4px;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:4px;">
+            <sc-for list="{{ stFilters }}" as="f" hint-placeholder-count="4">
+              <button onClick="{{ f.onClick }}" style="border:none;border-radius:6px;padding:6px 13px;cursor:pointer;font-family:Geist;font-size:12.5px;background:{{ f.bg }};color:{{ f.color }};">{{ f.l }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ openAddModal }}" style="display:inline-flex;align-items:center;gap:8px;border:none;border-radius:9px;padding:8px 16px;cursor:pointer;background:var(--slate);color:var(--cream);font-family:Geist;font-size:13px;font-weight:600;white-space:nowrap;" style-hover="background:#5b6aaa;">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8h10"/></svg>
+            Añadir contrato
+          </button>
+        </div>
+      </div>
+
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="text-align:left;background:rgba(114,136,174,0.05);">
+            <th style="padding:11px 18px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;">Expediente / Organismo</th>
+            <th style="padding:11px 12px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;">CPV</th>
+            <th style="padding:11px 12px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;text-align:right;">Importe</th>
+            <th style="padding:11px 12px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;text-align:right;">Vencimiento</th>
+            <th style="padding:11px 18px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;text-align:right;">Estado</th>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{ carteraRows }}" as="c" hint-placeholder-count="10">
+              <tr onClick="{{ c.onClick }}" style="cursor:pointer;border-top:1px solid var(--border);" style-hover="background:rgba(114,136,174,0.07);">
+                <td style="padding:13px 18px;max-width:380px;">
+                  <div style="font-size:13px;font-weight:500;">{{ c.org }}</div>
+                  <div style="font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px;">{{ c.obj }}</div>
+                  <div style="font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--steel);margin-top:3px;">{{ c.id }}</div>
+                </td>
+                <td style="padding:13px 12px;font-family:'Geist Mono',monospace;font-size:12px;color:var(--cream);">{{ c.cpv }}</td>
+                <td style="padding:13px 12px;text-align:right;font-family:'Geist Mono',monospace;font-size:13px;">{{ c.impStr }}</td>
+                <td style="padding:13px 12px;text-align:right;font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted);">{{ c.venceStr }}</td>
+                <td style="padding:13px 18px;text-align:right;">
+                  <span style="display:inline-flex;align-items:center;gap:8px;justify-content:flex-end;">
+                    <span style="font-family:'Geist Mono',monospace;font-size:12.5px;font-weight:600;">{{ c.diasStr }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid var(--border2);white-space:nowrap;">
+                      <span style="width:7px;height:7px;border-radius:50%;background:{{ c.dotColor }};animation:{{ c.anim }};flex-shrink:0;"></span>{{ c.statusLabel }}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ PIPELINE ============ -->
+    <sc-if value="{{ isPipeline }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:26px 30px 30px;display:flex;flex-direction:column;height:100%;">
+      <div style="margin-bottom:18px;flex-shrink:0;">
+        <h1 style="margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Pipeline</h1>
+        <p style="margin:0;color:var(--steel);font-size:13px;">Ciclo de vida de cada licitación · arrastra las tarjetas entre columnas</p>
+      </div>
+      <div style="display:flex;gap:14px;overflow-x:auto;flex:1;padding-bottom:8px;align-items:flex-start;">
+        <sc-for list="{{ columns }}" as="col" hint-placeholder-count="6">
+          <div onDragOver="{{ col.onDragOver }}" onDrop="{{ col.onDrop }}" style="width:262px;flex-shrink:0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;max-height:100%;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <span style="font-size:12.5px;font-weight:600;letter-spacing:0.01em;">{{ col.label }}</span>
+              <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--steel);background:var(--panel);border-radius:20px;padding:2px 9px;">{{ col.count }}</span>
+            </div>
+            <div style="padding:9px;display:flex;flex-direction:column;gap:9px;overflow-y:auto;">
+              <sc-for list="{{ col.cards }}" as="c" hint-placeholder-count="2">
+                <div draggable="true" onDragStart="{{ c.onDragStart }}" onClick="{{ c.onClick }}" style="cursor:grab;background:var(--panel);border:1px solid var(--border2);border-radius:10px;padding:12px;" style-hover="border-color:var(--steel);">
+                  <div style="font-size:12.5px;font-weight:600;margin-bottom:5px;line-height:1.3;">{{ c.org }}</div>
+                  <div style="font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ c.obj }}</div>
+                  <div style="display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:11px;margin-bottom:9px;">
+                    <span style="color:var(--cream);">{{ c.preStr }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:5px;color:var(--muted);"><span style="width:6px;height:6px;border-radius:50%;background:{{ c.dotColor }};"></span>{{ c.diasStr }}</span>
+                  </div>
+                  <div style="height:4px;border-radius:4px;background:rgba(114,136,174,0.18);overflow:hidden;margin-bottom:9px;">
+                    <div style="height:100%;width:{{ c.docPct }};background:var(--steel);border-radius:4px;"></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--steel);">
+                    <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:18px;height:18px;border-radius:50%;background:var(--slate);display:inline-flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:600;color:var(--cream);">{{ c.resp }}</span></span>
+                    <span style="font-family:'Geist Mono',monospace;">doc {{ c.docLabel }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ PLACSP ============ -->
+    <sc-if value="{{ isPlacsp }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:26px 30px 40px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;">
+        <div>
+          <h1 style="margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Explorar PLACSP</h1>
+          <p style="margin:0;color:var(--steel);font-size:13px;">Licitaciones nuevas detectadas según tus filtros de CPV</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 12px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--ok);"></span>
+          Última comprobación: <span style="font-family:'Geist Mono',monospace;color:var(--cream);">{{ lastCheck }}</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:18px;align-items:start;">
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);">
+            <h2 style="margin:0;font-size:14px;font-weight:600;">Bandeja de entrada</h2>
+            <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--steel);">nuevas hoy</span>
+          </div>
+          <div style="display:flex;flex-direction:column;">
+            <sc-for list="{{ inbox }}" as="i" hint-placeholder-count="6">
+              <div style="padding:15px 18px;border-bottom:1px solid var(--border);">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;">
+                  <div style="flex:1;min-width:0;">
+                    <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px;">
+                      <span style="font-size:13.5px;font-weight:600;">{{ i.org }}</span>
+                      <span style="font-size:10px;color:var(--steel);border:1px solid var(--border2);border-radius:20px;padding:2px 8px;">{{ i.filtro }}</span>
+                    </div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.45;margin-bottom:8px;">{{ i.obj }}</div>
+                    <div style="display:flex;gap:18px;font-family:'Geist Mono',monospace;font-size:11px;color:var(--steel);flex-wrap:wrap;">
+                      <span>{{ i.id }}</span>
+                      <span style="color:var(--cream);">{{ i.preStr }}</span>
+                      <span>CPV {{ i.cpv }}</span>
+                      <span>Plazo {{ i.plazoStr }}</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:7px;flex-shrink:0;">
+                    <button onClick="{{ i.onGo }}" style="border:none;border-radius:7px;padding:7px 16px;cursor:pointer;font-family:Geist;font-size:12px;font-weight:600;background:rgba(52,211,153,0.14);color:var(--ok);" style-hover="background:rgba(52,211,153,0.24);">Presentarse</button>
+                    <button onClick="{{ i.onNo }}" style="border:1px solid var(--border2);border-radius:7px;padding:7px 16px;cursor:pointer;font-family:Geist;font-size:12px;background:transparent;color:var(--muted);" style-hover="color:var(--danger);border-color:var(--danger);">Descartar</button>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <div style="padding:14px 18px;border-bottom:1px solid var(--border);"><h2 style="margin:0;font-size:14px;font-weight:600;">Filtros guardados</h2></div>
+          <div style="padding:14px;display:flex;flex-direction:column;gap:13px;">
+            <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+              <div style="border:1px solid var(--border2);border-radius:10px;padding:13px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                  <div>
+                    <div style="font-size:13px;font-weight:600;">{{ f.name }}</div>
+                    <div style="font-size:11px;color:var(--steel);margin-top:1px;">{{ f.cliente }}</div>
+                  </div>
+                  <button onClick="{{ f.onToggle }}" style="display:inline-flex;align-items:center;gap:6px;background:transparent;border:none;cursor:pointer;font-family:Geist;font-size:11px;color:{{ f.estadoColor }};"><span style="width:7px;height:7px;border-radius:50%;background:{{ f.estadoColor }};"></span>{{ f.estado }}</button>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+                  <sc-for list="{{ f.cpvChips }}" as="chip" hint-placeholder-count="2">
+                    <span style="display:inline-flex;align-items:center;gap:7px;font-family:'Geist Mono',monospace;font-size:11px;background:rgba(114,136,174,0.14);border-radius:20px;padding:4px 6px 4px 10px;">
+                      {{ chip.code }}
+                      <button onClick="{{ chip.onRemove }}" style="background:transparent;border:none;cursor:pointer;color:var(--steel);display:inline-flex;padding:0;" style-hover="color:var(--danger);"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+                    </span>
+                  </sc-for>
+                </div>
+                <div style="display:flex;gap:7px;">
+                  <input value="{{ f.inputVal }}" onInput="{{ f.onInput }}" onKeyDown="{{ f.onKey }}" placeholder="Añadir CPV…" style="flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:7px;padding:7px 10px;outline:none;color:var(--cream);font-family:'Geist Mono',monospace;font-size:11.5px;"/>
+                  <button onClick="{{ f.onAdd }}" style="border:1px solid var(--border2);border-radius:7px;padding:0 13px;cursor:pointer;background:var(--panel2);color:var(--cream);font-family:Geist;font-size:13px;" style-hover="border-color:var(--steel);">+</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ ORGANISMOS ============ -->
+    <sc-if value="{{ isOrg }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:26px 30px 40px;">
+      <div style="margin-bottom:20px;">
+        <h1 style="margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Organismos</h1>
+        <p style="margin:0;color:var(--steel);font-size:13px;">Directorio de entidades públicas y métricas de relación</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;">
+        <sc-for list="{{ orgs }}" as="o" hint-placeholder-count="7">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:17px;" style-hover="border-color:var(--border2);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:10px;">
+              <div>
+                <div style="font-size:14px;font-weight:600;line-height:1.3;">{{ o.org }}</div>
+                <div style="font-size:11.5px;color:var(--steel);margin-top:3px;">{{ o.tipo }} · {{ o.region }}</div>
+              </div>
+              <div style="width:36px;height:36px;border-radius:9px;background:var(--panel2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#7288AE" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M6 5h.5M9.5 5h.5M6 8h.5M9.5 8h.5M7 13v-2h2v2"/></svg>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+              <div><div style="font-family:'Geist Mono',monospace;font-size:17px;font-weight:600;">{{ o.con }}</div><div style="font-size:10px;color:var(--steel);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;">Contratos</div></div>
+              <div><div style="font-family:'Geist Mono',monospace;font-size:17px;font-weight:600;">{{ o.lic }}</div><div style="font-size:10px;color:var(--steel);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;">Licit.</div></div>
+              <div><div style="font-family:'Geist Mono',monospace;font-size:17px;font-weight:600;color:var(--ok);">{{ o.tasaStr }}</div><div style="font-size:10px;color:var(--steel);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;">Éxito</div></div>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:11px;display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;"><span style="color:var(--steel);">Importe acumulado</span><span style="font-family:'Geist Mono',monospace;">{{ o.impStr }}</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;"><span style="color:var(--steel);">Contacto</span><span style="color:var(--muted);">{{ o.contacto }}</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;"><span style="color:var(--steel);">Último contacto</span><span style="font-family:'Geist Mono',monospace;color:var(--muted);">{{ o.ultStr }}</span></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ SOLVENCIA ============ -->
+    <sc-if value="{{ isSol }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:26px 30px 40px;">
+      <div style="margin-bottom:20px;">
+        <h1 style="margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Solvencia</h1>
+        <p style="margin:0;color:var(--steel);font-size:13px;">Documentación de solvencia técnica, económica y administrativa</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="text-align:left;background:rgba(114,136,174,0.05);">
+            <th style="padding:11px 18px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;">Documento</th>
+            <th style="padding:11px 12px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;">Emisor</th>
+            <th style="padding:11px 12px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;text-align:right;">Caducidad</th>
+            <th style="padding:11px 18px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);font-weight:500;text-align:right;">Estado</th>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{ sol }}" as="d" hint-placeholder-count="7">
+              <tr style="border-top:1px solid var(--border);" style-hover="background:rgba(114,136,174,0.06);">
+                <td style="padding:13px 18px;">
+                  <div style="font-size:13px;font-weight:500;">{{ d.name }}</div>
+                  <div style="font-size:11px;color:var(--steel);margin-top:2px;">{{ d.tipo }}</div>
+                </td>
+                <td style="padding:13px 12px;font-size:12.5px;color:var(--muted);">{{ d.emisor }}</td>
+                <td style="padding:13px 12px;text-align:right;font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted);">{{ d.cadStr }}</td>
+                <td style="padding:13px 18px;text-align:right;">
+                  <span style="display:inline-flex;align-items:center;gap:7px;justify-content:flex-end;font-size:11.5px;">
+                    <span style="font-family:'Geist Mono',monospace;color:var(--steel);white-space:nowrap;">{{ d.diasStr }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:20px;border:1px solid var(--border2);white-space:nowrap;"><span style="width:7px;height:7px;border-radius:50%;background:{{ d.dotColor }};flex-shrink:0;"></span>{{ d.estado }}</span>
+                  </span>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ DETALLE ============ -->
+    <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:22px 30px 40px;">
+      <button onClick="{{ goBack }}" style="display:inline-flex;align-items:center;gap:7px;background:transparent;border:none;cursor:pointer;color:var(--steel);font-family:Geist;font-size:13px;margin-bottom:18px;padding:0;" style-hover="color:var(--cream);">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 4l-4 4 4 4"/></svg> Volver
+      </button>
+
+      <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:20px;align-items:start;">
+        <div style="display:flex;flex-direction:column;gap:18px;">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;">
+              <div style="flex:1;min-width:240px;">
+                <div style="font-size:11px;letter-spacing:0.07em;text-transform:uppercase;color:var(--steel);margin-bottom:8px;">{{ detail.kicker }}</div>
+                <h1 style="margin:0 0 6px;font-size:20px;font-weight:600;line-height:1.3;">{{ detail.orgName }}</h1>
+                <p style="margin:0 0 10px;color:var(--muted);font-size:13px;line-height:1.5;">{{ detail.obj }}</p>
+                <span style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--steel);">{{ detail.id }}</span>
+              </div>
+              <div style="text-align:right;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:16px 20px;min-width:160px;">
+                <div style="display:flex;align-items:baseline;gap:9px;justify-content:flex-end;">
+                  <span style="width:11px;height:11px;border-radius:50%;background:{{ detail.dotColor }};animation:{{ detail.anim }};"></span>
+                  <span style="font-family:'Geist Mono',monospace;font-size:40px;font-weight:600;letter-spacing:-0.02em;line-height:1;">{{ detail.diasAbs }}</span>
+                  <span style="font-size:13px;color:var(--muted);">días</span>
+                </div>
+                <div style="font-size:11.5px;color:var(--steel);margin-top:8px;max-width:170px;">{{ detail.dirText }} {{ detail.countLabel }}</div>
+                <div style="margin-top:10px;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);"><span style="width:7px;height:7px;border-radius:50%;background:{{ detail.dotColor }};"></span>{{ detail.statusLabel }}</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:20px;">
+              <sc-for list="{{ detail.fields }}" as="fl" hint-placeholder-count="6">
+                <div style="background:var(--panel);padding:13px 15px;">
+                  <div style="font-size:10.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--steel);margin-bottom:6px;">{{ fl.k }}</div>
+                  <div style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--cream);">{{ fl.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 20px;border-bottom:1px solid var(--border);">
+              <h2 style="margin:0;font-size:14px;font-weight:600;">Documentación requerida</h2>
+              <span style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--steel);">{{ detail.docDone }}/{{ detail.docTotal }}</span>
+            </div>
+            <div style="padding:8px 12px;">
+              <sc-for list="{{ detail.docs }}" as="doc" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 8px;">
+                  <sc-if value="{{ doc.done }}" hint-placeholder-val="{{ true }}">
+                    <span style="width:19px;height:19px;border-radius:50%;background:rgba(52,211,153,0.18);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#34D399" stroke-width="2.2"><path d="M3 8l3.5 3.5L13 5"/></svg></span>
+                  </sc-if>
+                  <sc-if value="{{ doc.done }}" hint-placeholder-val="{{ false }}">
+                    <span></span>
+                  </sc-if>
+                  <span style="font-size:13px;">{{ doc.name }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:18px;">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+            <div style="padding:15px 20px;border-bottom:1px solid var(--border);"><h2 style="margin:0;font-size:14px;font-weight:600;">Organismo</h2></div>
+            <div style="padding:16px 20px;">
+              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">{{ detail.orgName }}</div>
+              <sc-if value="{{ detail.org }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--steel);">Tipo</span><span style="color:var(--muted);">{{ detail.org.tipo }}</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--steel);">Región</span><span style="color:var(--muted);">{{ detail.org.region }}</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--steel);">Contratos</span><span style="font-family:'Geist Mono',monospace;">{{ detail.org.con }}</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--steel);">Importe acumulado</span><span style="font-family:'Geist Mono',monospace;">{{ detail.org.impStr }}</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--steel);">Tasa de éxito</span><span style="font-family:'Geist Mono',monospace;color:var(--ok);">{{ detail.org.tasaStr }}</span></div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+            <div style="padding:15px 20px;border-bottom:1px solid var(--border);"><h2 style="margin:0;font-size:14px;font-weight:600;">Actividad</h2></div>
+            <div style="padding:14px 20px;">
+              <sc-for list="{{ detail.timeline }}" as="t" hint-placeholder-count="3">
+                <div style="display:flex;gap:12px;position:relative;padding-bottom:16px;">
+                  <span style="width:9px;height:9px;border-radius:50%;background:{{ t.tone }};margin-top:4px;flex-shrink:0;"></span>
+                  <div><div style="font-size:12.5px;line-height:1.4;">{{ t.txt }}</div><div style="font-size:10.5px;color:var(--steel);font-family:'Geist Mono',monospace;margin-top:2px;">{{ t.when }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ AJUSTES ============ -->
+    <sc-if value="{{ isAjustes }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:26px 30px 40px;max-width:760px;">
+      <div style="margin-bottom:20px;">
+        <h1 style="margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Ajustes</h1>
+        <p style="margin:0;color:var(--steel);font-size:13px;">Preferencias de la cuenta y notificaciones</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px;">
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);"><h2 style="margin:0;font-size:14px;font-weight:600;">Información de la cuenta</h2></div>
+        <div style="padding:20px 22px;display:flex;gap:20px;align-items:flex-start;">
+          <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#4B5694,#7288AE);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#EAE0CF;flex-shrink:0;">AF</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <div style="font-size:16px;font-weight:600;margin-bottom:3px;">Almudena Ferrer</div>
+              <div style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;padding:3px 10px;border-radius:20px;background:rgba(114,136,174,0.14);color:var(--steel);">
+                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="12" height="8" rx="1"/><path d="M6 5V3h4v2"/></svg>
+                Responsable de licitaciones
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div>
+                <div style="font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--steel);margin-bottom:6px;">Correo electrónico</div>
+                <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#7288AE" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M2 5l6 5 6-5"/></svg>
+                  <span style="font-size:13px;color:var(--cream);">almudena.ferrer@munozbosch.es</span>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--steel);margin-bottom:6px;">Teléfono</div>
+                <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#7288AE" stroke-width="1.5"><path d="M3 2h3l1.5 3.5-2 1.2a8.5 8.5 0 0 0 3.8 3.8l1.2-2L14 10v3a1 1 0 0 1-1 1C5.2 14 2 7 2 3a1 1 0 0 1 1-1z"/></svg>
+                  <span style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--cream);">+34 612 345 678</span>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--steel);margin-bottom:6px;">Empresa</div>
+                <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#7288AE" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M6 5h.5M9.5 5h.5M6 8h.5M9.5 8h.5M7 13v-2h2v2"/></svg>
+                  <span style="font-size:13px;color:var(--cream);">Muñoz Bosch</span>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--steel);margin-bottom:6px;">NIF empresa</div>
+                <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#7288AE" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6M5 10h4"/></svg>
+                  <span style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--cream);">B-46.123.456</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;padding-top:4px;">
+              <button style="display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border2);border-radius:8px;padding:8px 16px;cursor:pointer;background:transparent;color:var(--muted);font-family:Geist;font-size:12.5px;" style-hover="color:var(--cream);border-color:var(--steel);">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M11 2l3 3-9 9H2v-3z"/></svg>
+                Editar perfil
+              </button>
+              <button style="display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border2);border-radius:8px;padding:8px 16px;cursor:pointer;background:transparent;color:var(--muted);font-family:Geist;font-size:12.5px;" style-hover="color:var(--cream);border-color:var(--steel);">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 2a4 4 0 0 0 0 8 4 4 0 0 0 0-8zM2 14c0-2.2 2.7-4 6-4s6 1.8 6 4"/></svg>
+                Cambiar contraseña
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <div style="padding:14px 18px;border-bottom:1px solid var(--border);"><h2 style="margin:0;font-size:14px;font-weight:600;">Notificaciones</h2></div>
+        <div style="padding:6px 18px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border);"><div><div style="font-size:13px;">Alertas de vencimiento de contrato</div><div style="font-size:11.5px;color:var(--steel);margin-top:2px;">Aviso a 90, 30 y 7 días</div></div><div style="width:38px;height:21px;border-radius:20px;background:var(--ok);position:relative;"><span style="position:absolute;right:3px;top:3px;width:15px;height:15px;border-radius:50%;background:#0a0e2a;"></span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border);"><div><div style="font-size:13px;">Nuevas licitaciones PLACSP</div><div style="font-size:11.5px;color:var(--steel);margin-top:2px;">Resumen diario por correo</div></div><div style="width:38px;height:21px;border-radius:20px;background:var(--ok);position:relative;"><span style="position:absolute;right:3px;top:3px;width:15px;height:15px;border-radius:50%;background:#0a0e2a;"></span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;"><div><div style="font-size:13px;">Caducidad de documentos de solvencia</div><div style="font-size:11.5px;color:var(--steel);margin-top:2px;">Aviso a 30 días</div></div><div style="width:38px;height:21px;border-radius:20px;background:rgba(114,136,174,0.3);position:relative;"><span style="position:absolute;left:3px;top:3px;width:15px;height:15px;border-radius:50%;background:#8e98c9;"></span></div></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ PLAN ============ -->
+    <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:26px 30px 40px;max-width:820px;">
+      <div style="margin-bottom:20px;">
+        <h1 style="margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:-0.01em;">Plan &amp; Facturación</h1>
+        <p style="margin:0;color:var(--steel);font-size:13px;">Tu suscripción y método de pago</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:18px;">
+        <div style="background:linear-gradient(150deg,#1a2160,#141a4d);border:1px solid var(--border2);border-radius:14px;padding:22px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--steel);">Plan actual</span>
+            <span style="font-size:11px;padding:3px 11px;border-radius:20px;background:rgba(52,211,153,0.15);color:var(--ok);">Activo</span>
+          </div>
+          <div style="font-size:24px;font-weight:600;margin-bottom:4px;">Profesional</div>
+          <div style="font-family:'Geist Mono',monospace;font-size:14px;color:var(--muted);margin-bottom:18px;">149 € / mes · facturación anual</div>
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted);"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#34D399" stroke-width="2"><path d="M3 8l3.5 3.5L13 5"/></svg>Contratos y licitaciones ilimitados</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted);"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#34D399" stroke-width="2"><path d="M3 8l3.5 3.5L13 5"/></svg>Hasta 10 filtros PLACSP por cliente</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted);"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#34D399" stroke-width="2"><path d="M3 8l3.5 3.5L13 5"/></svg>5 usuarios del equipo</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:18px;">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;">
+            <div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);margin-bottom:12px;">Método de pago</div>
+            <div style="display:flex;align-items:center;gap:12px;"><div style="width:40px;height:28px;border-radius:6px;background:var(--panel2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="#7288AE" stroke-width="1.4"><rect x="2" y="4" width="12" height="8" rx="1.5"/><path d="M2 7h12"/></svg></div><div><div style="font-family:'Geist Mono',monospace;font-size:13px;">•••• •••• •••• 4582</div><div style="font-size:11px;color:var(--steel);margin-top:2px;">Caduca 09/27</div></div></div>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;">
+            <div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--steel);margin-bottom:12px;">Próxima factura</div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-family:'Geist Mono',monospace;font-size:22px;font-weight:600;">1.788,00 €</span><span style="font-size:12px;color:var(--steel);font-family:'Geist Mono',monospace;">01 ene 2027</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+  </main>
+
+  <!-- ============ MODAL AÑADIR CONTRATO ============ -->
+  <sc-if value="{{ showAddModal }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeAddModal }}" style="position:fixed;inset:0;background:rgba(5,8,25,0.72);z-index:100;display:flex;align-items:center;justify-content:center;">
+    <div onClick="{{ stopProp }}" style="background:#141a4d;border:1px solid rgba(114,136,174,0.35);border-radius:16px;width:560px;max-width:94vw;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.55);">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid rgba(114,136,174,0.16);">
+        <div>
+          <h2 style="margin:0 0 3px;font-size:17px;font-weight:600;">Añadir contrato</h2>
+          <p style="margin:0;font-size:12px;color:#8e98c9;">Registro manual de un contrato vigente</p>
+        </div>
+        <button onClick="{{ closeAddModal }}" style="background:transparent;border:none;cursor:pointer;color:#8e98c9;display:flex;padding:4px;" style-hover="color:#EAE0CF;">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+        </button>
+      </div>
+
+      <div style="padding:22px 24px;display:flex;flex-direction:column;gap:16px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div style="grid-column:1/-1;">
+            <label style="display:block;font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:#7288AE;margin-bottom:7px;">Organismo contratante *</label>
+            <input value="{{ addForm.org }}" onInput="{{ addForm.onOrg }}" placeholder="p. ej. Ayuntamiento de Valencia" style="width:100%;background:#0d1238;border:1px solid rgba(114,136,174,0.30);border-radius:8px;padding:10px 13px;outline:none;color:#EAE0CF;font-family:Geist;font-size:13.5px;" />
+          </div>
+          <div style="grid-column:1/-1;">
+            <label style="display:block;font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:#7288AE;margin-bottom:7px;">Objeto del contrato</label>
+            <input value="{{ addForm.obj }}" onInput="{{ addForm.onObj }}" placeholder="p. ej. Suministro de productos de limpieza" style="width:100%;background:#0d1238;border:1px solid rgba(114,136,174,0.30);border-radius:8px;padding:10px 13px;outline:none;color:#EAE0CF;font-family:Geist;font-size:13.5px;" />
+          </div>
+          <div>
+            <label style="display:block;font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:#7288AE;margin-bottom:7px;">Nº expediente</label>
+            <input value="{{ addForm.id }}" onInput="{{ addForm.onId }}" placeholder="p. ej. 2026/CON-0099" style="width:100%;background:#0d1238;border:1px solid rgba(114,136,174,0.30);border-radius:8px;padding:10px 13px;outline:none;color:#EAE0CF;font-family:'Geist Mono',monospace;font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block;font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:#7288AE;margin-bottom:7px;">Importe (€)</label>
+            <input value="{{ addForm.imp }}" onInput="{{ addForm.onImp }}" placeholder="p. ej. 450000" style="width:100%;background:#0d1238;border:1px solid rgba(114,136,174,0.30);border-radius:8px;padding:10px 13px;outline:none;color:#EAE0CF;font-family:'Geist Mono',monospace;font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block;font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:#7288AE;margin-bottom:7px;">Código CPV</label>
+            <input value="{{ addForm.cpv }}" onInput="{{ addForm.onCpv }}" placeholder="39830000-9" style="width:100%;background:#0d1238;border:1px solid rgba(114,136,174,0.30);border-radius:8px;padding:10px 13px;outline:none;color:#EAE0CF;font-family:'Geist Mono',monospace;font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block;font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:#7288AE;margin-bottom:7px;">Responsable</label>
+            <input value="{{ addForm.resp }}" onInput="{{ addForm.onResp }}" placeholder="p. ej. Luis Cano" style="width:100%;background:#0d1238;border:1px solid rgba(114,136,174,0.30);border-radius:8px;padding:10px 13px;outline:none;color:#EAE0CF;font-family:Geist;font-size:13.5px;" />
+          </div>
+          <div>
+            <label style="display:block;font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:#7288AE;margin-bottom:7px;">Fecha de inicio</label>
+            <input type="date" value="{{ addForm.ini }}" onInput="{{ addForm.onIni }}" style="width:100%;background:#0d1238;border:1px solid rgba(114,136,174,0.30);border-radius:8px;padding:10px 13px;outline:none;color:#EAE0CF;font-family:'Geist Mono',monospace;font-size:13px;color-scheme:dark;" />
+          </div>
+          <div>
+            <label style="display:block;font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:#7288AE;margin-bottom:7px;">Fecha de vencimiento *</label>
+            <input type="date" value="{{ addForm.vence }}" onInput="{{ addForm.onVence }}" style="width:100%;background:#0d1238;border:1px solid rgba(114,136,174,0.30);border-radius:8px;padding:10px 13px;outline:none;color:#EAE0CF;font-family:'Geist Mono',monospace;font-size:13px;color-scheme:dark;" />
+          </div>
+        </div>
+
+        <p style="margin:0;font-size:11px;color:#5d68a0;">* Campos obligatorios. El expediente se genera automáticamente si se deja vacío.</p>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:4px;border-top:1px solid rgba(114,136,174,0.16);">
+          <button onClick="{{ closeAddModal }}" style="border:1px solid rgba(114,136,174,0.30);border-radius:9px;padding:10px 22px;cursor:pointer;background:transparent;color:#8e98c9;font-family:Geist;font-size:13.5px;" style-hover="color:#EAE0CF;border-color:#7288AE;">Cancelar</button>
+          <button onClick="{{ saveContract }}" style="border:none;border-radius:9px;padding:10px 24px;cursor:pointer;background:#4B5694;color:#EAE0CF;font-family:Geist;font-size:13.5px;font-weight:600;" style-hover="background:#5b6aaa;">Guardar contrato</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;pulseCritical&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Comportamiento&quot;},&quot;defaultView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dashboard&quot;,&quot;cartera&quot;,&quot;pipeline&quot;,&quot;placsp&quot;,&quot;organismos&quot;,&quot;solvencia&quot;],&quot;default&quot;:&quot;dashboard&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Comportamiento&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#7288AE&quot;,&quot;options&quot;:[&quot;#7288AE&quot;,&quot;#34D399&quot;,&quot;#FBBF24&quot;,&quot;#8B5CF6&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Marca&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    const M=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    this.M=M;
+    this.contracts=[
+      {id:'2023/CON-0412',org:'Ayuntamiento de Madrid',obj:'Suministro de productos de limpieza para dependencias municipales',imp:1240000,cpv:'39830000-9',ini:'2023-09-01',vence:'2026-08-31',resp:'Marta Ruiz'},
+      {id:'SAS-2024/0188',org:'Servicio Andaluz de Salud',obj:'Suministro de detergentes y desinfectantes hospitalarios',imp:2860000,cpv:'39831000-6',ini:'2024-01-15',vence:'2026-07-15',resp:'Ana Gil'},
+      {id:'GVA-2024/CT-77',org:'Generalitat Valenciana',obj:'Material de limpieza para centros educativos',imp:980000,cpv:'39830000-9',ini:'2024-09-01',vence:'2026-12-20',resp:'Luis Cano'},
+      {id:'DIBA-2025/214',org:'Diputación de Barcelona',obj:'Productos higiénico-sanitarios y celulosa',imp:540000,cpv:'33760000-5',ini:'2025-03-01',vence:'2027-03-01',resp:'Marta Ruiz'},
+      {id:'UCM-2024/SUM-31',org:'Universidad Complutense de Madrid',obj:'Suministro de consumibles de limpieza',imp:320000,cpv:'39830000-9',ini:'2024-07-10',vence:'2026-07-09',resp:'Ana Gil'},
+      {id:'MM-2024/0902',org:'Metro de Madrid',obj:'Productos de limpieza para estaciones y trenes',imp:1760000,cpv:'39830000-9',ini:'2024-10-01',vence:'2026-09-30',resp:'Luis Cano'},
+      {id:'CABTF-2025/41',org:'Cabildo de Tenerife',obj:'Suministro de detergentes industriales',imp:210000,cpv:'39831000-6',ini:'2025-02-12',vence:'2026-08-12',resp:'Marta Ruiz'},
+      {id:'ADIF-2025/SUM-08',org:'ADIF',obj:'Productos de limpieza para instalaciones ferroviarias',imp:1120000,cpv:'39830000-9',ini:'2025-07-01',vence:'2027-06-30',resp:'Ana Gil'},
+      {id:'JCYL-2024/663',org:'Junta de Castilla y León',obj:'Material de limpieza para residencias de mayores',imp:760000,cpv:'39830000-9',ini:'2024-10-15',vence:'2026-10-15',resp:'Luis Cano'},
+      {id:'MDEF-2024/0501',org:'Ministerio de Defensa',obj:'Suministro de productos de limpieza para acuartelamientos',imp:1500000,cpv:'39830000-9',ini:'2024-08-05',vence:'2026-08-05',resp:'Marta Ruiz'}
+    ];
+    this.organismos=[
+      {org:'Ayuntamiento de Madrid',tipo:'Administración Local',region:'Madrid',con:1,imp:1240000,lic:0,tasa:45,contacto:'Servicio de Contratación Central',ult:'2026-06-10'},
+      {org:'Servicio Andaluz de Salud',tipo:'Sanidad autonómica',region:'Andalucía',con:1,imp:2860000,lic:1,tasa:52,contacto:'Plataforma de Compras SAS',ult:'2026-06-22'},
+      {org:'Generalitat Valenciana',tipo:'Admin. autonómica',region:'C. Valenciana',con:1,imp:980000,lic:1,tasa:38,contacto:'Conselleria de Hacienda',ult:'2026-06-05'},
+      {org:'Diputación de Barcelona',tipo:'Admin. provincial',region:'Cataluña',con:1,imp:540000,lic:0,tasa:41,contacto:'Servei de Contractació',ult:'2026-05-28'},
+      {org:'Metro de Madrid',tipo:'Empresa pública',region:'Madrid',con:1,imp:1760000,lic:0,tasa:60,contacto:'Dirección de Compras',ult:'2026-06-18'},
+      {org:'ADIF',tipo:'Empresa pública estatal',region:'Nacional',con:1,imp:1120000,lic:0,tasa:33,contacto:'Dir. de Contratación',ult:'2026-04-30'},
+      {org:'Universidad Complutense de Madrid',tipo:'Universidad pública',region:'Madrid',con:1,imp:320000,lic:0,tasa:50,contacto:'Servicio de Compras UCM',ult:'2026-06-12'}
+    ];
+    this.solvencia=[
+      {name:'Clasificación empresarial · Grupo U (limpieza)',tipo:'Clasificación',emisor:'Junta Consultiva de Contratación',ini:'2022-03-01',cad:'2027-03-01'},
+      {name:'Seguro de Responsabilidad Civil',tipo:'Seguro',emisor:'Mapfre Empresas',ini:'2025-01-01',cad:'2026-12-31'},
+      {name:'ISO 9001 · Gestión de la Calidad',tipo:'Certificación',emisor:'AENOR',ini:'2024-05-10',cad:'2027-05-10'},
+      {name:'ISO 14001 · Gestión Ambiental',tipo:'Certificación',emisor:'AENOR',ini:'2023-07-15',cad:'2026-07-15'},
+      {name:'Certificado de estar al corriente · AEAT',tipo:'Certificado',emisor:'Agencia Tributaria',ini:'2026-04-01',cad:'2026-10-01'},
+      {name:'Certificado Seguridad Social · TGSS',tipo:'Certificado',emisor:'Tesorería General SS',ini:'2026-04-01',cad:'2026-10-01'},
+      {name:'Solvencia económica · Cuentas 2024',tipo:'Financiero',emisor:'Registro Mercantil',ini:'2025-06-30',cad:'2026-06-30'}
+    ];
+    this.activity=[
+      {who:'Marta Ruiz',txt:'movió Ayto. de Bilbao a Go / No-Go',when:'hace 2 h',tone:'slate'},
+      {who:'Sistema',txt:'nueva licitación detectada: Ayto. de Zaragoza',when:'hace 5 h',tone:'steel'},
+      {who:'Sistema',txt:'ISO 14001 caduca en 18 días',when:'hace 8 h',tone:'warn'},
+      {who:'Sistema',txt:'contrato SAS marcado como crítico (18 d)',when:'ayer 18:40',tone:'danger'},
+      {who:'Luis Cano',txt:'subió el pliego técnico a Ayto. de Málaga',when:'ayer 12:05',tone:'slate'}
+    ];
+    this.stages=[
+      {key:'detectada',label:'Detectada'},
+      {key:'analisis',label:'En análisis'},
+      {key:'gonogo',label:'Go / No-Go'},
+      {key:'preparacion',label:'En preparación'},
+      {key:'presentada',label:'Presentada'},
+      {key:'adjudicada',label:'Adjudicada'}
+    ];
+    this.state={
+      view:(props&&props.defaultView)||'dashboard', prevView:'dashboard', company:'Muñoz Bosch',
+      extraContracts:[],
+      showAddModal:false,
+      addForm:{org:'',obj:'',id:'',imp:'',cpv:'39830000-9',ini:'',vence:'',resp:''},
+      detail:null, dragId:null, carteraQuery:'', carteraStatus:'todos',
+      pipeline:[
+        {id:'LIC-2601',org:'Ayuntamiento de Sevilla',obj:'Suministro de productos de limpieza para colegios públicos',pre:680000,plazo:'2026-07-10',resp:'Marta Ruiz',doc:2,docT:6,cpv:'39830000-9',stage:'detectada'},
+        {id:'LIC-2602',org:'Diputación de Valencia',obj:'Detergentes para dependencias provinciales',pre:240000,plazo:'2026-07-18',resp:'Luis Cano',doc:1,docT:5,cpv:'39831000-6',stage:'detectada'},
+        {id:'LIC-2598',org:'Gobierno de Aragón',obj:'Material higiénico-sanitario',pre:410000,plazo:'2026-07-05',resp:'Marta Ruiz',doc:3,docT:6,cpv:'33760000-5',stage:'analisis'},
+        {id:'LIC-2595',org:'SERGAS · Galicia',obj:'Desinfectantes hospitalarios',pre:1350000,plazo:'2026-07-22',resp:'Ana Gil',doc:2,docT:7,cpv:'39831000-6',stage:'analisis'},
+        {id:'LIC-2590',org:'Ayuntamiento de Bilbao',obj:'Productos de limpieza para edificios municipales',pre:520000,plazo:'2026-07-14',resp:'Luis Cano',doc:4,docT:6,cpv:'39830000-9',stage:'gonogo'},
+        {id:'LIC-2581',org:'Universidad de Granada',obj:'Consumibles de limpieza',pre:300000,plazo:'2026-07-09',resp:'Ana Gil',doc:5,docT:6,cpv:'39830000-9',stage:'preparacion'},
+        {id:'LIC-2577',org:'Puertos del Estado',obj:'Suministro integral de limpieza',pre:890000,plazo:'2026-07-25',resp:'Marta Ruiz',doc:6,docT:7,cpv:'39830000-9',stage:'preparacion'},
+        {id:'LIC-2560',org:'Junta de Extremadura',obj:'Material de limpieza',pre:360000,plazo:'2026-06-30',resp:'Luis Cano',doc:6,docT:6,cpv:'39830000-9',stage:'presentada'},
+        {id:'LIC-2555',org:'Ayuntamiento de Málaga',obj:'Detergentes y productos de limpieza',pre:270000,plazo:'2026-06-20',resp:'Ana Gil',doc:5,docT:5,cpv:'39831000-6',stage:'presentada'},
+        {id:'LIC-2540',org:'Diputación de Alicante',obj:'Productos de limpieza para sedes provinciales',pre:450000,plazo:'2026-05-15',resp:'Marta Ruiz',doc:7,docT:7,cpv:'39830000-9',stage:'adjudicada'}
+      ],
+      inbox:[
+        {id:'2026/PLA-9921',org:'Ayuntamiento de Zaragoza',obj:'Suministro de productos de limpieza para instalaciones deportivas',pre:320000,plazo:'2026-07-28',cpv:'39830000-9',filtro:'Limpieza · M. Bosch',pub:'2026-06-27'},
+        {id:'2026/PLA-9918',org:'SACYL · Castilla y León',obj:'Desinfectantes para centros de salud',pre:1100000,plazo:'2026-08-03',cpv:'39831000-6',filtro:'Sanitario · M. Bosch',pub:'2026-06-27'},
+        {id:'2026/PLA-9910',org:'Ayuntamiento de Murcia',obj:'Papel higiénico y celulosa',pre:190000,plazo:'2026-07-30',cpv:'33760000-5',filtro:'Higiénico · M. Bosch',pub:'2026-06-26'},
+        {id:'2026/PLA-9907',org:'Cabildo de Gran Canaria',obj:'Material de limpieza para dependencias insulares',pre:280000,plazo:'2026-08-05',cpv:'39830000-9',filtro:'Limpieza · M. Bosch',pub:'2026-06-26'},
+        {id:'2026/PLA-9901',org:'Universidad de Sevilla',obj:'Consumibles de limpieza',pre:150000,plazo:'2026-07-26',cpv:'39830000-9',filtro:'Limpieza · M. Bosch',pub:'2026-06-26'},
+        {id:'2026/PLA-9894',org:'Metro de Bilbao',obj:'Escobas, cepillos y útiles de limpieza',pre:95000,plazo:'2026-08-10',cpv:'39224300-1',filtro:'Útiles · M. Bosch',pub:'2026-06-25'}
+      ],
+      filters:[
+        {id:'f1',name:'Limpieza · M. Bosch',cliente:'Muñoz Bosch',cpvs:['39830000-9','39831000-6'],activo:true},
+        {id:'f2',name:'Higiénico · M. Bosch',cliente:'Muñoz Bosch',cpvs:['33760000-5','39224300-1'],activo:true},
+        {id:'f3',name:'Sanitario · M. Bosch',cliente:'Muñoz Bosch',cpvs:['39831000-6'],activo:false}
+      ],
+      cpvInputs:{}
+    };
+  }
+  fmtEur(n){ return n.toLocaleString('es-ES')+' €'; }
+  daysUntil(s){ const [y,m,d]=s.split('-').map(Number); return Math.round((Date.UTC(y,m-1,d)-Date.UTC(2026,5,27))/86400000); }
+  fmtDate(s){ const [y,m,d]=s.split('-').map(Number); return d+' '+this.M[m-1]+' '+y; }
+  statusOf(dias){ return dias<0?'venc':dias<30?'danger':dias<90?'warn':'ok'; }
+  dot(st){ return st==='danger'||st==='venc'?'#F87171':st==='warn'?'#FBBF24':'#34D399'; }
+  stLabel(st){ return st==='venc'?'Vencido':st==='danger'?'Crítico':st==='warn'?'Atención':'En plazo'; }
+  setView(v){ this.setState({view:v, detail:null}); }
+  openDetail(type,id){ this.setState({prevView:this.state.view, view:'detail', detail:{type,id}}); }
+  goBack(){ this.setState({view:this.state.prevView, detail:null}); }
+  dragOver(e){ e.preventDefault(); }
+  drop(stage){ const id=this.state.dragId; if(!id) return; this.setState(s=>({pipeline:s.pipeline.map(c=>c.id===id?{...c,stage}:c), dragId:null})); }
+  decideInbox(id,decision){
+    this.setState(s=>{
+      const item=s.inbox.find(i=>i.id===id);
+      const inbox=s.inbox.filter(i=>i.id!==id);
+      let pipeline=s.pipeline;
+      if(decision==='go' && item){
+        pipeline=[{id:'LIC-'+(2603+pipeline.length),org:item.org,obj:item.obj,pre:item.pre,plazo:item.plazo,resp:'Sin asignar',doc:0,docT:6,cpv:item.cpv,stage:'detectada'},...pipeline];
+      }
+      return {inbox,pipeline};
+    });
+  }
+  addCpv(fid){
+    const raw=(this.state.cpvInputs[fid]||'').trim();
+    if(!raw) return;
+    this.setState(s=>({
+      filters:s.filters.map(f=>f.id===fid && !f.cpvs.includes(raw)?{...f,cpvs:[...f.cpvs,raw]}:f),
+      cpvInputs:{...s.cpvInputs,[fid]:''}
+    }));
+  }
+  removeCpv(fid,cpv){ this.setState(s=>({filters:s.filters.map(f=>f.id===fid?{...f,cpvs:f.cpvs.filter(c=>c!==cpv)}:f)})); }
+  setCpvInput(fid,v){ this.setState(s=>({cpvInputs:{...s.cpvInputs,[fid]:v}})); }
+  toggleFilter(fid){ this.setState(s=>({filters:s.filters.map(f=>f.id===fid?{...f,activo:!f.activo}:f)})); }
+  openAddModal(){ this.setState({showAddModal:true,addForm:{org:'',obj:'',id:'',imp:'',cpv:'39830000-9',ini:'',vence:'',resp:''}}); }
+  closeAddModal(){ this.setState({showAddModal:false}); }
+  setAddField(k,v){ this.setState(s=>({addForm:{...s.addForm,[k]:v}})); }
+  saveContract(){
+    const f=this.state.addForm;
+    if(!f.org.trim()||!f.vence.trim()) return;
+    const now=new Date();
+    const newC={id:f.id.trim()||'MAN-'+now.getFullYear()+('0'+(now.getMonth()+1)).slice(-2)+now.getDate()+'-'+Math.floor(Math.random()*9000+1000),org:f.org.trim(),obj:f.obj.trim()||'Contrato manual',imp:parseFloat((f.imp||'0').replace(/\./g,'').replace(',','.'))||0,cpv:f.cpv.trim()||'39830000-9',ini:f.ini||new Date().toISOString().slice(0,10),vence:f.vence.trim(),resp:f.resp.trim()||'Sin asignar'};
+    this.setState(s=>({extraContracts:[...s.extraContracts,newC],showAddModal:false}));
+  }
+
+  renderVals(){
+    const st=this.state;
+    const accent=this.props.accent||'#7288AE';
+    const pulse=this.props.pulseCritical!==false;
+    const accentGrad='linear-gradient(135deg,'+accent+',#4B5694)';
+    const mk=(v)=>({bg:st.view===v?'rgba(114,136,174,0.16)':'transparent',color:st.view===v?'#EAE0CF':'#8e98c9',fw:st.view===v?'600':'500',bar:st.view===v?accent:'transparent'});
+    const nav={dashboard:mk('dashboard'),cartera:mk('cartera'),pipeline:mk('pipeline'),placsp:mk('placsp'),organismos:mk('organismos'),solvencia:mk('solvencia'),ajustes:mk('ajustes'),plan:mk('plan')};
+    const go={dashboard:()=>this.setView('dashboard'),cartera:()=>this.setView('cartera'),pipeline:()=>this.setView('pipeline'),placsp:()=>this.setView('placsp'),organismos:()=>this.setView('organismos'),solvencia:()=>this.setView('solvencia'),ajustes:()=>this.setView('ajustes'),plan:()=>this.setView('plan')};
+
+    const decC=(c)=>{ const dias=this.daysUntil(c.vence); const s=this.statusOf(dias); return {...c,dias,diasStr:dias+' d',impStr:this.fmtEur(c.imp),venceStr:this.fmtDate(c.vence),iniStr:this.fmtDate(c.ini),dotColor:this.dot(s),statusLabel:this.stLabel(s),anim:(pulse&&(s==='danger'||s==='venc'))?'lcpulse 1.8s ease-in-out infinite':'none',onClick:()=>this.openDetail('contrato',c.id)}; };
+    const allContracts=[...this.contracts,...st.extraContracts];
+    let contracts=allContracts.map(decC);
+    const q=st.carteraQuery.toLowerCase();
+    let carteraRows=contracts.filter(c=>{
+      const okq=!q||c.org.toLowerCase().includes(q)||c.obj.toLowerCase().includes(q)||c.id.toLowerCase().includes(q);
+      const sv=this.statusOf(c.dias);
+      const oks=st.carteraStatus==='todos'||(st.carteraStatus==='crit'&&(sv==='danger'||sv==='venc'))||(st.carteraStatus==='aten'&&sv==='warn')||(st.carteraStatus==='plazo'&&sv==='ok');
+      return okq&&oks;
+    });
+    const dashSoon=[...contracts].sort((a,b)=>a.dias-b.dias).slice(0,5);
+
+    const valor=allContracts.reduce((s,c)=>s+c.imp,0);
+    const soon=contracts.filter(c=>c.dias<90).length;
+    const activosLic=st.pipeline.filter(c=>c.stage!=='adjudicada').length;
+    const kpis=[
+      {label:'Contratos activos',value:String(this.contracts.length),sub:'+2 este trimestre',tone:'ok'},
+      {label:'Valor de cartera',value:(valor/1e6).toFixed(2).replace('.',',')+' M€',sub:'10 contratos vigentes',tone:'muted'},
+      {label:'Próximos a vencer',value:String(soon),sub:'< 90 días',tone:'warn'},
+      {label:'Licitaciones activas',value:String(activosLic),sub:'en pipeline',tone:'steel'},
+      {label:'Tasa de adjudicación',value:'41 %',sub:'histórico 24 meses',tone:'ok'}
+    ];
+
+    const decP=(c)=>{ const dias=this.daysUntil(c.plazo); const s=this.statusOf(dias); const pct=Math.round(c.doc/c.docT*100); return {...c,dias,diasStr:dias<0?'cerrado':dias+' d',preStr:this.fmtEur(c.pre),plazoStr:this.fmtDate(c.plazo),dotColor:this.dot(s),docLabel:c.doc+'/'+c.docT,docPct:pct+'%',onClick:()=>this.openDetail('oportunidad',c.id),onDragStart:()=>this.setState({dragId:c.id})}; };
+    const columns=this.stages.map(stg=>{ const cards=st.pipeline.filter(c=>c.stage===stg.key).map(decP); return {key:stg.key,label:stg.label,count:cards.length,cards,onDrop:()=>this.drop(stg.key),onDragOver:this.dragOver.bind(this)}; });
+    const dashOpps=st.pipeline.filter(c=>c.stage!=='adjudicada').map(decP).sort((a,b)=>a.dias-b.dias).slice(0,4);
+
+    const inbox=st.inbox.map(i=>({...i,preStr:this.fmtEur(i.pre),plazoStr:this.fmtDate(i.plazo),pubStr:this.fmtDate(i.pub),onGo:()=>this.decideInbox(i.id,'go'),onNo:()=>this.decideInbox(i.id,'no')}));
+
+    const filters=st.filters.map(f=>({...f,inputVal:st.cpvInputs[f.id]||'',estado:f.activo?'Activo':'Pausado',estadoColor:f.activo?'#34D399':'#8e98c9',cpvChips:f.cpvs.map(cv=>({code:cv,onRemove:()=>this.removeCpv(f.id,cv)})),onInput:(e)=>this.setCpvInput(f.id,e.target.value),onKey:(e)=>{if(e.key==='Enter')this.addCpv(f.id);},onAdd:()=>this.addCpv(f.id),onToggle:()=>this.toggleFilter(f.id)}));
+
+    const orgs=this.organismos.map(o=>({...o,impStr:this.fmtEur(o.imp),tasaStr:o.tasa+'%',ultStr:this.fmtDate(o.ult)}));
+
+    const sol=this.solvencia.map(d=>{ const dias=this.daysUntil(d.cad); const s=this.statusOf(dias); return {...d,dias,cadStr:this.fmtDate(d.cad),iniStr:this.fmtDate(d.ini),dotColor:this.dot(s),estado:dias<0?'Caducado':dias<30?'Por caducar':'Vigente',estadoColor:this.dot(s),diasStr:dias<0?'caducado':'en '+dias+' d'}; });
+
+    const alerts=[];
+    contracts.filter(c=>c.dias<30).forEach(c=>alerts.push({tone:'#F87171',title:c.org,txt:'Contrato vence en '+c.dias+' días',meta:c.id}));
+    sol.filter(d=>d.dias<30).forEach(d=>alerts.push({tone:d.dias<0?'#F87171':'#FBBF24',title:d.name.split('·')[0].trim(),txt:d.dias<0?'Documento caducado':'Caduca en '+d.dias+' días',meta:d.emisor}));
+    st.inbox.slice(0,1).forEach(i=>alerts.push({tone:'#7288AE',title:'Nueva licitación',txt:i.org,meta:i.filtro}));
+
+    // detail
+    let detail=null;
+    if(st.view==='detail' && st.detail){
+      const {type,id}=st.detail;
+      const src=type==='contrato'?this.contracts.find(c=>c.id===id):st.pipeline.find(c=>c.id===id);
+      if(src){
+        const isC=type==='contrato';
+        const dateKey=isC?src.vence:src.plazo;
+        const dias=this.daysUntil(dateKey);
+        const s=this.statusOf(dias);
+        const docList=['Pliego de cláusulas administrativas','Pliego de prescripciones técnicas','Oferta económica','Declaración responsable (DEUC)','Acreditación de solvencia','Garantía / aval'];
+        const docDone=isC?6:Math.max(0,src.doc||0);
+        const o=this.organismos.find(x=>x.org===src.org);
+        detail={
+          type, isC,
+          kicker:isC?'Contrato vigente':'Oportunidad · '+(this.stages.find(g=>g.key===src.stage)||{}).label,
+          id:src.id, org:src.org, obj:src.obj,
+          dias, diasAbs:Math.abs(dias),
+          dirText:dias<0?'vencido':'restantes',
+          countLabel:isC?'hasta el vencimiento del contrato':'hasta el cierre del plazo de presentación',
+          dotColor:this.dot(s), statusLabel:this.stLabel(s),
+          anim:(pulse&&(s==='danger'||s==='venc'))?'lcpulse 1.8s ease-in-out infinite':'none',
+          fields:[
+            {k:'Importe'+(isC?'':' (presupuesto base)'),v:this.fmtEur(isC?src.imp:src.pre),mono:true},
+            {k:'Código CPV',v:src.cpv,mono:true},
+            {k:isC?'Fecha de inicio':'Estado',v:isC?this.fmtDate(src.ini):(this.stages.find(g=>g.key===src.stage)||{}).label},
+            {k:isC?'Fecha de vencimiento':'Plazo de presentación',v:this.fmtDate(dateKey),mono:false},
+            {k:'Organismo',v:src.org},
+            {k:'Responsable',v:src.resp||'Sin asignar'}
+          ],
+          docs:docList.map((d,i)=>({name:d,done:i<docDone})),
+          docDone, docTotal:docList.length,
+          org:o?{...o,impStr:this.fmtEur(o.imp),tasaStr:o.tasa+'%'}:null,
+          orgName:src.org,
+          timeline:[
+            {txt:isC?'Contrato formalizado y en ejecución':'Documentación en preparación',when:'estado actual',tone:'#7288AE'},
+            {txt:isC?'Adjudicación publicada en PLACSP':'Detectada por filtro automático',when:'',tone:'#4B5694'},
+            {txt:isC?'Oferta presentada y valorada':'Pendiente de decisión go/no-go',when:'',tone:'#4B5694'}
+          ]
+        };
+      }
+    }
+
+    return {nav,go,accentGrad,company:st.company,
+      isDashboard:st.view==='dashboard',isCartera:st.view==='cartera',isPipeline:st.view==='pipeline',isPlacsp:st.view==='placsp',isOrg:st.view==='organismos',isSol:st.view==='solvencia',isAjustes:st.view==='ajustes',isPlan:st.view==='plan',isDetail:st.view==='detail',
+      kpis,dashSoon,dashOpps,alerts,activity:this.activity,
+      carteraRows,carteraQuery:st.carteraQuery,onCartera:(e)=>this.setState({carteraQuery:e.target.value}),
+      stFilters:[{k:'todos',l:'Todos'},{k:'crit',l:'Crítico'},{k:'aten',l:'Atención'},{k:'plazo',l:'En plazo'}].map(o=>({...o,active:st.carteraStatus===o.k,bg:st.carteraStatus===o.k?'rgba(114,136,174,0.22)':'transparent',color:st.carteraStatus===o.k?'#EAE0CF':'#8e98c9',onClick:()=>this.setState({carteraStatus:o.k})})),
+      columns,inbox,filters,orgs,sol,detail,
+      lastCheck:'27 jun 2026 · 06:00',
+      goBack:()=>this.goBack(),
+      stopProp:(e)=>e.stopPropagation(),
+      showAddModal:st.showAddModal,
+      openAddModal:()=>this.openAddModal(),
+      closeAddModal:()=>this.closeAddModal(),
+      saveContract:()=>this.saveContract(),
+      addForm:{
+        org:st.addForm.org, onOrg:(e)=>this.setAddField('org',e.target.value),
+        obj:st.addForm.obj, onObj:(e)=>this.setAddField('obj',e.target.value),
+        id:st.addForm.id,   onId:(e)=>this.setAddField('id',e.target.value),
+        imp:st.addForm.imp, onImp:(e)=>this.setAddField('imp',e.target.value),
+        cpv:st.addForm.cpv, onCpv:(e)=>this.setAddField('cpv',e.target.value),
+        ini:st.addForm.ini, onIni:(e)=>this.setAddField('ini',e.target.value),
+        vence:st.addForm.vence, onVence:(e)=>this.setAddField('vence',e.target.value),
+        resp:st.addForm.resp, onResp:(e)=>this.setAddField('resp',e.target.value)
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

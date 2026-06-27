@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --border:  rgba(114, 136, 174, 0.16);
+  --border2: rgba(114, 136, 174, 0.30);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #0a0e2a;
+  color: #EAE0CF;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb { background: rgba(114,136,174,0.28); border-radius: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+input::placeholder { color: #5d68a0; }
+
+@keyframes lcpulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(248,113,113,0.55); }
+  50%      { box-shadow: 0 0 0 5px rgba(248,113,113,0); }
+}
+.animate-lcpulse { animation: lcpulse 1.8s ease-in-out infinite; }
+
+.border-lc { border-color: var(--border); }
+.border-lc2 { border-color: var(--border2); }
