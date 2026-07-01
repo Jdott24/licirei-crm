@@ -4,7 +4,10 @@ import { createClient }         from '@/lib/supabase/client'
 import { fmtDate, fmtEur }      from '@/lib/utils'
 import type { CpvFilter, PipelineStage } from '@/lib/types'
 import type { PlacspInboxItem, SyncResult } from '@/lib/placsp/types'
+import { PLACSP_FEED_URL }      from '@/lib/placsp/PlacspApiService'
 import PipelineStageModal        from '@/components/PipelineStageModal'
+
+const MAX_FEED_BYTES = 5 * 1024 * 1024
 
 const PANEL = { background: '#141a4d', border: '1px solid rgba(114,136,174,0.16)', borderRadius: 12, overflow: 'hidden' }
 
@@ -40,7 +43,28 @@ export default function PlacspPage() {
   async function syncPlacsp() {
     setSyncing(true); setSyncResult(null); setError('')
     try {
-      const res  = await fetch('/api/placsp/sync', { method: 'POST' })
+      // Fetch the feed from the browser (Spanish IP) to bypass geo-restriction.
+      // If CORS blocks it we fall through and the API will try server-side.
+      let feedXml: string | undefined
+      try {
+        const ctrl = new AbortController()
+        const tid  = setTimeout(() => ctrl.abort(), 20_000)
+        const feed = await fetch(PLACSP_FEED_URL, {
+          headers: { Accept: 'application/atom+xml, application/xml, text/xml' },
+          signal: ctrl.signal,
+        })
+        clearTimeout(tid)
+        if (feed.ok) {
+          const text = await feed.text()
+          if (text.length <= MAX_FEED_BYTES) feedXml = text
+        }
+      } catch { /* CORS or network — proceed without XML */ }
+
+      const res  = await fetch('/api/placsp/sync', {
+        method:  'POST',
+        headers: feedXml ? { 'Content-Type': 'text/xml' } : {},
+        body:    feedXml,
+      })
       const json = await res.json() as SyncResult
       if (!res.ok) throw new Error(json.error ?? 'Error desconocido')
       setSyncResult(json)

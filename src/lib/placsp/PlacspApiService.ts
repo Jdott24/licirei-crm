@@ -34,9 +34,12 @@ const codiceParser = new XMLParser({
  * El campo rawData siempre guarda la entrada cruda para depurar los paths
  * cuando se tenga acceso directo al feed desde una IP española.
  */
+export const PLACSP_FEED_URL = FEED_URL
+
 export class PlacspApiService {
-  async search(params: PlacspSearchParams): Promise<FetchResult> {
-    const xml      = await this.fetchFeed()
+  /** feedXml: XML pre-fetched by the browser (bypasses geo-restriction). */
+  async search(params: PlacspSearchParams, feedXml?: string): Promise<FetchResult> {
+    const xml      = feedXml ?? await this.fetchFeed()
     const atomRows = this.parseAtom(xml)
 
     let parseErrors = 0

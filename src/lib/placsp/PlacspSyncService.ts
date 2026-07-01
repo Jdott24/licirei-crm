@@ -18,22 +18,23 @@ export class PlacspSyncService {
   private readonly identity = new PlacspIdentityService()
   private readonly repo     = new PlacspRepository()
 
-  async syncForUser(userId: string, db: SupabaseClient): Promise<SyncResult> {
+  /** feedXml: XML pre-fetched by the browser to bypass geo-restriction. */
+  async syncForUser(userId: string, db: SupabaseClient, feedXml?: string): Promise<SyncResult> {
     const start = Date.now()
     try {
-      return await this.run(userId, db, start)
+      return await this.run(userId, db, start, feedXml)
     } catch (err) {
       return this.build('error', start, { error: err instanceof Error ? err.message : String(err) })
     }
   }
 
-  private async run(userId: string, db: SupabaseClient, start: number): Promise<SyncResult> {
+  private async run(userId: string, db: SupabaseClient, start: number, feedXml?: string): Promise<SyncResult> {
     // ── FETCH ─────────────────────────────────────────────────────────────────
     const filters = await this.repo.getActiveCpvFilters(userId, db)
     if (!filters.length) return this.build('no_filters', start, {})
 
     const userCpvs = Array.from(new Set(filters.flatMap((f) => f.cpvs)))
-    const { entries, downloaded } = await this.api.search({ cpvs: userCpvs })
+    const { entries, downloaded } = await this.api.search({ cpvs: userCpvs }, feedXml)
 
     // ── IDENTITY ──────────────────────────────────────────────────────────────
     const withIdentity: NormalizedContract[] = entries.map((e) => {

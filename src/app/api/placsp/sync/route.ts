@@ -23,7 +23,7 @@ function makeSupabase() {
   )
 }
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
     const supabase = makeSupabase()
     const { data: { user }, error: authErr } = await supabase.auth.getUser()
@@ -31,7 +31,11 @@ export async function POST() {
       return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
     }
 
-    const result = await new PlacspSyncService().syncForUser(user.id, supabase)
+    // Accept XML pre-fetched by the browser (bypasses geo-restriction)
+    const ct = req.headers.get('content-type') ?? ''
+    const feedXml = ct.includes('xml') ? await req.text() : undefined
+
+    const result = await new PlacspSyncService().syncForUser(user.id, supabase, feedXml)
 
     if (result.status === 'error') {
       return NextResponse.json(result, { status: 502 })
