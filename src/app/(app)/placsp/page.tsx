@@ -17,6 +17,7 @@ export default function PlacspPage() {
   const [inputs,    setInputs]    = useState<Record<string, string>>({})
   const [modal,     setModal]     = useState<ModalState>(null)
   const [syncing,   setSyncing]   = useState(false)
+  const [creating,  setCreating]  = useState(false)
   const [syncResult,setSyncResult]= useState<SyncResult | null>(null)
   const [error,     setError]     = useState('')
   const [lastCheck, setLastCheck] = useState<string | null>(null)
@@ -130,13 +131,20 @@ export default function PlacspPage() {
   }
 
   async function crearFiltro() {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-    const { error: fErr } = await supabase.from('cpv_filters').insert({
-      nombre: 'Nuevo filtro', cliente: '', cpvs: [], activo: true, user_id: user.id,
-    })
-    if (fErr) { setError(fErr.message); return }
-    await fetchFilters()
+    setCreating(true); setError('')
+    try {
+      const { data: { user }, error: authErr } = await supabase.auth.getUser()
+      if (authErr || !user) { setError('Sesión expirada, recarga la página'); return }
+      const { error: fErr } = await supabase.from('cpv_filters').insert({
+        nombre: 'Nuevo filtro', cliente: '', cpvs: [], activo: true, user_id: user.id,
+      })
+      if (fErr) { setError(fErr.message); return }
+      await fetchFilters()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Error al crear filtro')
+    } finally {
+      setCreating(false)
+    }
   }
 
   const syncStatusMsg = syncResult
@@ -272,10 +280,10 @@ export default function PlacspPage() {
           <div className="flex justify-between items-center px-4 py-3.5"
             style={{ borderBottom: '1px solid rgba(114,136,174,0.16)' }}>
             <h2 className="text-[14px] font-semibold text-[#EAE0CF] m-0">Filtros CPV</h2>
-            <button onClick={crearFiltro}
-              className="text-[11.5px] text-[#7288AE] hover:text-[#EAE0CF] px-2 py-1 rounded-lg"
-              style={{ border: '1px solid rgba(114,136,174,0.20)' }}>
-              + Nuevo filtro
+            <button onClick={crearFiltro} disabled={creating}
+              className="text-[11.5px] text-[#7288AE] hover:text-[#EAE0CF] px-2 py-1 rounded-lg transition-opacity"
+              style={{ border: '1px solid rgba(114,136,174,0.20)', opacity: creating ? 0.5 : 1 }}>
+              {creating ? 'Creando…' : '+ Nuevo filtro'}
             </button>
           </div>
 
