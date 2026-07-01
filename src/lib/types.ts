@@ -77,20 +77,6 @@ export interface PipelineItem {
   created_at: string
 }
 
-export interface InboxItem {
-  id: string
-  expediente: string
-  org: string
-  obj: string
-  presupuesto: number
-  plazo: string | null
-  cpv: string
-  filtro: string
-  publicado: string | null
-  user_id: string
-  created_at: string
-}
-
 export interface Organismo {
   id: string
   org: string

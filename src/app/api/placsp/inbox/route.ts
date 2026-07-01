@@ -1,7 +1,7 @@
 import { NextResponse }                               from 'next/server'
 import { createServerClient, type CookieMethodsServer } from '@supabase/ssr'
 import { cookies }                                       from 'next/headers'
-import { PlacspSyncService }                            from '@/lib/placsp/PlacspSyncService'
+import { PlacspRepository }                             from '@/lib/placsp/PlacspRepository'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +23,7 @@ function makeSupabase() {
   )
 }
 
-export async function POST() {
+export async function GET() {
   try {
     const supabase = makeSupabase()
     const { data: { user }, error: authErr } = await supabase.auth.getUser()
@@ -31,12 +31,8 @@ export async function POST() {
       return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
     }
 
-    const result = await new PlacspSyncService().syncForUser(user.id, supabase)
-
-    if (result.status === 'error') {
-      return NextResponse.json(result, { status: 502 })
-    }
-    return NextResponse.json(result)
+    const items = await new PlacspRepository().getInbox(user.id, supabase)
+    return NextResponse.json(items)
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : 'Error interno' },
