@@ -18,17 +18,20 @@ export default function DashboardPage() {
   const [loading,   setLoading]   = useState(true)
 
   const fetchAll = useCallback(async () => {
-    const [c, p, s, a] = await Promise.all([
-      supabase.from('contracts').select('*').order('fecha_vence'),
-      supabase.from('pipeline').select('*').order('plazo'),
-      supabase.from('solvencia').select('*').order('fecha_cad'),
-      supabase.from('activity').select('*').order('created_at', { ascending: false }).limit(8),
-    ])
-    setContracts(c.data ?? [])
-    setPipeline(p.data ?? [])
-    setSol(s.data ?? [])
-    setActivity(a.data ?? [])
-    setLoading(false)
+    try {
+      const [c, p, s, a] = await Promise.all([
+        supabase.from('contracts').select('*').order('fecha_vence'),
+        supabase.from('pipeline').select('*').order('plazo'),
+        supabase.from('solvencia').select('*').order('fecha_cad'),
+        supabase.from('activity').select('*').order('created_at', { ascending: false }).limit(8),
+      ])
+      setContracts(c.data ?? [])
+      setPipeline(p.data ?? [])
+      setSol(s.data ?? [])
+      setActivity(a.data ?? [])
+    } finally {
+      setLoading(false)
+    }
   }, [supabase])
 
   useEffect(() => {
@@ -38,7 +41,9 @@ export default function DashboardPage() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'pipeline'  }, fetchAll)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'solvencia' }, fetchAll)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'activity'  }, fetchAll)
-      .subscribe()
+      .subscribe((status, err) => {
+        if (err) console.error('Dashboard realtime error:', err)
+      })
     return () => { supabase.removeChannel(ch) }
   }, [fetchAll])
 

@@ -67,27 +67,27 @@ export default function AddContractModal({ onClose, onSaved }: Props) {
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <label className="block text-[10px] uppercase tracking-widest text-[#7288AE] mb-1.5">Organismo *</label>
-              <input style={FIELD_STYLE} value={form.org} onChange={set('org')} required placeholder="Ayuntamiento de..." />
+              <input style={FIELD_STYLE} value={form.org} onChange={set('org')} required maxLength={200} placeholder="Ayuntamiento de..." />
             </div>
             <div className="col-span-2">
               <label className="block text-[10px] uppercase tracking-widest text-[#7288AE] mb-1.5">Objeto del contrato</label>
-              <input style={FIELD_STYLE} value={form.obj} onChange={set('obj')} placeholder="Descripción del suministro..." />
+              <input style={FIELD_STYLE} value={form.obj} onChange={set('obj')} maxLength={500} placeholder="Descripción del suministro..." />
             </div>
             <div>
               <label className="block text-[10px] uppercase tracking-widest text-[#7288AE] mb-1.5">Nº Expediente</label>
-              <input style={FIELD_STYLE} value={form.expediente} onChange={set('expediente')} placeholder="2024/CON-001" />
+              <input style={FIELD_STYLE} value={form.expediente} onChange={set('expediente')} maxLength={60} placeholder="2024/CON-001" />
             </div>
             <div>
               <label className="block text-[10px] uppercase tracking-widest text-[#7288AE] mb-1.5">Importe (€)</label>
-              <input style={FIELD_STYLE} value={form.importe} onChange={set('importe')} placeholder="1.200.000" />
+              <input style={FIELD_STYLE} value={form.importe} onChange={set('importe')} maxLength={20} placeholder="1.200.000" />
             </div>
             <div>
               <label className="block text-[10px] uppercase tracking-widest text-[#7288AE] mb-1.5">CPV</label>
-              <input style={FIELD_STYLE} value={form.cpv} onChange={set('cpv')} placeholder="39830000-9" />
+              <input style={FIELD_STYLE} value={form.cpv} onChange={set('cpv')} maxLength={20} placeholder="39830000-9" />
             </div>
             <div>
               <label className="block text-[10px] uppercase tracking-widest text-[#7288AE] mb-1.5">Responsable</label>
-              <input style={FIELD_STYLE} value={form.responsable} onChange={set('responsable')} placeholder="Nombre" />
+              <input style={FIELD_STYLE} value={form.responsable} onChange={set('responsable')} maxLength={100} placeholder="Nombre" />
             </div>
             <div>
               <label className="block text-[10px] uppercase tracking-widest text-[#7288AE] mb-1.5">Fecha de inicio</label>

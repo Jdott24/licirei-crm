@@ -92,8 +92,9 @@ export default function PlacspPage() {
 
   // Filtros CPV
   async function toggleFilter(f: CpvFilter) {
-    await supabase.from('cpv_filters').update({ activo: !f.activo }).eq('id', f.id)
-    fetchAll()
+    const { error: err } = await supabase.from('cpv_filters').update({ activo: !f.activo }).eq('id', f.id)
+    if (err) { setError(err.message); return }
+    await fetchAll()
   }
 
   async function addCpv(fid: string) {
@@ -110,8 +111,9 @@ export default function PlacspPage() {
   async function removeCpv(fid: string, cpv: string) {
     const fil = filters.find(f => f.id === fid)
     if (!fil) return
-    await supabase.from('cpv_filters').update({ cpvs: fil.cpvs.filter(c => c !== cpv) }).eq('id', fid)
-    fetchAll()
+    const { error: err } = await supabase.from('cpv_filters').update({ cpvs: fil.cpvs.filter(c => c !== cpv) }).eq('id', fid)
+    if (err) { setError(err.message); return }
+    await fetchAll()
   }
 
   async function crearFiltro() {
