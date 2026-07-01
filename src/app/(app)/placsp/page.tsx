@@ -130,6 +130,12 @@ export default function PlacspPage() {
     await fetchFilters()
   }
 
+  async function eliminarFiltro(id: string) {
+    const { error: err } = await supabase.from('cpv_filters').delete().eq('id', id)
+    if (err) { setError(err.message); return }
+    await fetchFilters()
+  }
+
   async function crearFiltro() {
     setCreating(true); setError('')
     try {
@@ -149,10 +155,14 @@ export default function PlacspPage() {
 
   const syncStatusMsg = syncResult
     ? syncResult.status === 'no_filters'
-      ? 'Sin filtros CPV activos'
+      ? 'Sin filtros CPV activos — añade al menos un código CPV a un filtro activo'
       : syncResult.status === 'error'
       ? syncResult.error ?? 'Error al sincronizar'
-      : `${syncResult.inserted} nuevas · ${syncResult.updated} actualizadas · ${syncResult.matched} coincidencias · ${syncResult.duration}ms`
+      : syncResult.downloaded === 0
+      ? 'El feed PLACSP no devolvió entradas (posible restricción geográfica o feed vacío)'
+      : syncResult.matched === 0
+      ? `Feed descargado (${syncResult.downloaded} entradas) — ninguna coincide con tus códigos CPV`
+      : `${syncResult.inserted} nuevas · ${syncResult.updated} actualizadas · ${syncResult.downloaded} descargadas · ${syncResult.duration}ms`
     : null
 
   return (
@@ -280,11 +290,15 @@ export default function PlacspPage() {
           <div className="flex justify-between items-center px-4 py-3.5"
             style={{ borderBottom: '1px solid rgba(114,136,174,0.16)' }}>
             <h2 className="text-[14px] font-semibold text-[#EAE0CF] m-0">Filtros CPV</h2>
-            <button onClick={crearFiltro} disabled={creating}
-              className="text-[11.5px] text-[#7288AE] hover:text-[#EAE0CF] px-2 py-1 rounded-lg transition-opacity"
-              style={{ border: '1px solid rgba(114,136,174,0.20)', opacity: creating ? 0.5 : 1 }}>
-              {creating ? 'Creando…' : '+ Nuevo filtro'}
-            </button>
+            {filters.length >= 5 ? (
+              <span className="text-[11px] text-[#7288AE] px-2 py-1">máx. 5 filtros</span>
+            ) : (
+              <button onClick={crearFiltro} disabled={creating}
+                className="text-[11.5px] text-[#7288AE] hover:text-[#EAE0CF] px-2 py-1 rounded-lg transition-opacity"
+                style={{ border: '1px solid rgba(114,136,174,0.20)', opacity: creating ? 0.5 : 1 }}>
+                {creating ? 'Creando…' : '+ Nuevo filtro'}
+              </button>
+            )}
           </div>
 
           {filters.length === 0 ? (
@@ -296,17 +310,26 @@ export default function PlacspPage() {
               {filters.map((f) => (
                 <div key={f.id} className="rounded-xl p-3.5"
                   style={{ border: '1px solid rgba(114,136,174,0.30)' }}>
-                  <div className="flex justify-between items-center mb-2.5">
-                    <div>
+                  <div className="flex justify-between items-start mb-2.5">
+                    <div className="flex-1 min-w-0">
                       <div className="text-[13px] font-semibold text-[#EAE0CF]">{f.nombre}</div>
                       {f.cliente && <div className="text-[11px] text-[#7288AE] mt-0.5">{f.cliente}</div>}
                     </div>
-                    <button onClick={() => toggleFilter(f)}
-                      className="flex items-center gap-1.5 text-[11px]"
-                      style={{ color: f.activo ? '#34D399' : '#8e98c9' }}>
-                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: f.activo ? '#34D399' : '#8e98c9', display: 'inline-block' }} />
-                      {f.activo ? 'Activo' : 'Pausado'}
-                    </button>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <button onClick={() => toggleFilter(f)}
+                        className="flex items-center gap-1.5 text-[11px]"
+                        style={{ color: f.activo ? '#34D399' : '#8e98c9' }}>
+                        <span style={{ width: 7, height: 7, borderRadius: '50%', background: f.activo ? '#34D399' : '#8e98c9', display: 'inline-block' }} />
+                        {f.activo ? 'Activo' : 'Pausado'}
+                      </button>
+                      <button onClick={() => eliminarFiltro(f.id)}
+                        className="text-[#7288AE] hover:text-[#F87171] transition-colors"
+                        title="Eliminar filtro">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+                          <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 9h8l1-9"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-1.5 mb-2.5">
                     {f.cpvs.map((cpv) => (
